@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "المشتريات";
+}
+
+<div class="gradient-Header animate__animated animate__fadeInLeft" style="margin-bottom:30px;">
+    <div class="gradient-child">
+        <h1>المشتريات</h1>
+    </div>
+</div>
+
+<table id="table" class="table table-bordered table-hover" style="width:100%">
+    <thead class="thead-light">
+        <tr class="rows">
+            <th></th>
+            <th>المستخدم</th>
+            <th>نوع المنتج</th>
+            <th>اسم المنتج</th>
+            <th>التاريخ</th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(
+           GetDataTable('table', '/Payment/ViewAllPayments',
+               [
+                   { data: null, width: "4%" },
+                   { data: "UserName" },
+                   {
+                       data: "ProductType",
+                       render: RenderType
+                   },
+                   { data: "BuyedItemName" },
+                   {
+                       data: "BuyDate",
+                       render: convertJsonDateToShortDate
+                   },                  
+               ])
+       );
+
+        function RenderType(ProductType) {
+            if (ProductType == 0) { return '<h4><span class="label label-success badge-pill">محاضرة</span></h4>'; }
+            else if (ProductType == 1) { return '<h4><span class="label label-primary badge-pill">لايف</span></h4>'; }
+            else if (ProductType == 2) { return '<h4><span class="label label-info badge-pill">اختبار</span></h4>'; }
+            else if (ProductType == 3) { return '<h4><span class="label label-danger badge-pill">ملف</span></h4>'; }
+        };
+                    
+    </script>
+}

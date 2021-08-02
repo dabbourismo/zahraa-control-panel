@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "المدفوعات";
+}
+
+<div class="gradient-Header animate__animated animate__fadeInLeft" style="margin-bottom:30px;">
+    <div class="gradient-child">
+        <h1>المدفوعات</h1>
+    </div>
+</div>
+
+<table id="table" class="table table-bordered table-hover" style="width:100%">
+    <thead class="thead-light">
+        <tr class="rows">
+            <th></th>
+            <th>تاريخ العملية</th>
+            <th>اسم المشتري</th>
+            <th>المدفوع</th>
+            <th>الاتجاة</th>
+        </tr>
+    </thead>
+</table>
+
+
+@section scripts{
+    <script>
+        $(document).ready(
+           GetDataTable('table', '/Payment/ViewAllPaymentDetails',
+               [
+                   { data: null, width: "4%" },
+                   {
+                       data: "PayDate",
+                       render: convertJsonDateToShortDate
+                   },
+                    { data: "Username" },
+                    {
+                        data: "Payed",
+                        render: renderPayed
+                    },
+                   {
+                       data: "Direction",
+                       render: RenderDirection
+                   },
+
+               ])
+       );
+
+        function RenderDirection(Direction) {
+            if (Direction == 0) { return '<h4><span class="label label-success badge-pill">وارد</span></h4>'; }
+            else if (Direction == 1) { return '<h4><span class="label label-danger badge-pill">صادر</span></h4>'; }
+        };
+
+        function renderPayed(Payed) {
+            return '<h4>EGP <span class="label label-info badge-pill">' + Payed + '</span></h4>';
+        };
+
+    </script>
+}
+

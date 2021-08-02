@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "المدربين";
+}
+
+<div class="gradient-Header animate__animated animate__fadeInLeft">
+    <div class="gradient-child">
+        <h1>المدربين</h1>
+    </div>
+</div>
+
+<a class="btn btn-danger" id="AddButton" style="margin-bottom:10px;margin-top:15px;"
+   onclick="PopupForm('@Url.Action("AddEditTrainerUser","User")')">
+    اضافة <i class="fa fa-plus"> </i>
+</a>
+
+<table id="table" class="table table-bordered table-hover" style="width:100%">
+    <thead class="thead-light">
+        <tr class="rows">
+            <th></th>
+            <th>المدرب</th>
+            <th>الكلية</th>
+            <th>موبايل</th>
+            <th>الحالة</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts{
+    <script>
+        var EnableDisableColumn = {
+            "data": { Id: "Id", Status: "Status" },
+            "render": RenderEnableDisableButtons,
+            "orderable": false,
+            "searchable": false,
+            "width": "40px"
+        }
+        var buttonColumn = {
+            "data": "Id",
+            "render": RenderActionButtonsAdmin,
+            "orderable": false,
+            "searchable": false,
+            "width": "100px"
+        }
+        $(document).ready(
+           GetDataTable('table', '/User/ViewAllTrainerUsers',
+               [
+                   { data: null, width: "4%" },
+                   { data: "Name" },
+                   { data: "FacultyName" },
+                   { data: "Phone1" },
+                   {
+                       data: "Status",
+                       render: RenderStatus
+                   },
+                   buttonColumn,
+                  EnableDisableColumn
+               ])
+       );
+
+
+        function RenderActionButtonsAdmin(Id) {
+            return "<a class='btn btn-success' style='margin-right:4px;' onclick=PopupForm('@Url.Action("AddEditTrainerUser", "User")/" + Id + "')><i class='fa fa-pencil'></i></a>\
+                    <a class='btn btn-danger' style='margin-right:1px;' onclick=Delete('@Url.Action("DeleteTrainerUser", "User")/" + Id + "','المدرب؟')><i class='fa fa-trash'></i></a>"
+        };
+        function RenderStatus(Status) {
+            if (Status == 0) { return '<h4><span class="label label-success badge-pill">مفعل</span></h4>'; }
+            else if (Status == 1) { return '<h4><span class="label label-danger badge-pill">موقوف</span></h4>'; }
+        };
+      
+
+        function RenderEnableDisableButtons(data) {
+            if (data.Status == 0) {
+                return "<a class='btn btn-info btn-lg' style='margin-right:1px;'\
+                onclick=ToggleStatus('@Url.Action("ToggleUserActive", "User")/" + data.Id + "')><i class='fa fa-stop'></i></a>"
+            }
+            if (data.Status == 1) {
+                return "<a class='btn btn-success btn-lg' style='margin-right:1px;'\
+                onclick=ToggleStatus('@Url.Action("ToggleUserActive", "User")/" + data.Id + "')><i class='fa fa-play'></i></a>"
+            }
+
+        };
+    </script>
+    <script>
+        AnimateButton2('AddButton');
+    </script>
+}

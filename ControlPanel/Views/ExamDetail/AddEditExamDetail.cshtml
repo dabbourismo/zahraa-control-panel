@@ -1,0 +1,154 @@
+﻿@model ControlPanel.Models.ExamDetailDto
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<head>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+
+@*this will post form data to HTTPPOST action method*@
+@using (Html.BeginForm("AddEditExamDetail", "ExamDetail", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return SubmitFormWithImage(this);" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.ExamId)
+
+    @*<h1>player id = @Model.ExamID </h1>*@
+
+    <div class="container PanelContainer">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Exam Details</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Question, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Question, new { htmlAttributes = new { @class = "form-control", style = "height:200px" } })
+                            @Html.ValidationMessageFor(model => model.Question)
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <img class="lazyload" src="@Url.Content(@Model.Link + @Model.Id + ".jpg")" style="height:300px;width:100%;" id="imagePreview" />
+                            <input type="file" name="ImageUpload" accept="image/jpeg,image/png,image/jpg" onchange="ShowImagePreview(this, document.getElementById('imagePreview'))" />
+                            @Html.ValidationMessageFor(model => model.ImageUpload)
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <button id="p1" class="btn btn-primary" style="width:100%" onclick="copyToClipboard('#p1'); return false;">∆</button>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <button id="p2" class="btn btn-primary" style="width:100%" onclick="copyToClipboard('#p2'); return false;">→</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Answer1, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Answer1, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Answer1)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Answer2, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Answer2, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Answer1)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Answer3, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Answer3, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Answer1)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Answer4, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Answer4, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Answer1)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Answer5, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Answer5, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Answer1)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.RightAnswerDropDownList, new { @class = "control-label" })
+                            @Html.DropDownListFor(model => model.RightAnswer, Model.RightAnswerDropDownList, new { @class = "form-control", role = "menu", datatoggle = "dropdown" })
+                            @Html.ValidationMessageFor(model => model.RightAnswerDropDownList)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.QuestionTimer, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.QuestionTimer, new { htmlAttributes = new { @class = "form-control", @maxlength = "5", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.QuestionTimer)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @{
+                        if (Model.Id == 0)
+                        {
+                            <input type="submit" value="Add" class="btn btn-success" style="width:100%" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="Edit" class="btn btn-success" style="width:100%" />
+                        }
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+                        }
+<script src="~/Scripts/notify.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>$.validator.setDefaults({ onkeyup: false });</script>
+<script>
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        $(element).notify("Copied!",
+            { position: "top right", className: 'success', autoHideDelay: 700 }
+         );
+    }
+</script>

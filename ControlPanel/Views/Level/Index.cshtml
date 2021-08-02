@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewBag.Title = "المراحل";
+}
+
+<div class="gradient-Header animate__animated animate__fadeInLeft">
+    <div class="gradient-child">
+        <h1>الفرق</h1>
+    </div>
+</div>
+
+<a class="btn btn-primary" id="AddButton" style="margin-bottom:10px;margin-top:15px;"
+   onclick="PopupForm('@Url.Action("AddEditLevel","Level")')">
+    اضافة <i class="fa fa-plus"> </i>
+</a>
+<table id="table" class="table table-bordered table-hover" style="width:100%">
+    <thead class="thead-light">
+        <tr class="rows">
+            <th></th>
+            <th>اسم الفرقة</th>
+            <th>اسم الكلية</th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+@section scripts{
+
+    <script>
+        var buttonColumn = {
+            "data": "Id",
+            "render": RenderActionButtonsAdmin,
+            "orderable": false,
+            "searchable": false,
+            "width": "100px"
+        }
+        $(document).ready(
+           GetDataTable('table', '/Level/ViewAllLevels',
+               [
+                   { data: null, width: "4%" },
+                   { data: "Name" },
+                   { data: "FacultyName" },
+                   buttonColumn
+               ])
+       );
+
+
+
+        function RenderActionButtonsAdmin(Id) {
+            return "<a class='btn btn-success' style='margin-right:4px;' onclick=PopupForm('@Url.Action("AddEditLevel", "Level")/" + Id + "')><i class='fa fa-pencil'></i></a>\
+                    <a class='btn btn-danger' style='margin-right:1px;' onclick=Delete('@Url.Action("DeleteLevel", "Level")/" + Id + "','المرحلة؟')><i class='fa fa-trash'></i></a>"
+        };
+    </script>
+
+    <script>
+        AnimateButton2('AddButton');
+    </script>
+}
+

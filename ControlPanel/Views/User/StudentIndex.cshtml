@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewBag.Title = "الطلبة";
+}
+
+<div class="gradient-Header animate__animated animate__fadeInLeft">
+    <div class="gradient-child">
+        <h1>الطلبة</h1>
+    </div>
+</div>
+
+<a class="btn btn-primary" id="AddButton" style="margin-bottom:10px;margin-top:15px;"
+   onclick="PopupForm('@Url.Action("AddEditStudentUser","User")')">
+    اضافة <i class="fa fa-plus"> </i>
+</a>
+
+<table id="table" class="table table-bordered table-hover" style="width:100%">
+    <thead class="thead-light">
+        <tr class="rows">
+            <th></th>
+            <th></th>
+            <th>الحالة</th>
+            <th>الطالب</th>
+            <th>الكلية</th>
+            <th>المرحلة</th>
+            <th>القسم</th>
+            <th>موبايل</th>
+            <th>الرصيد</th>
+          
+            <th></th>
+            
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts{
+    <script>
+        var AddRemovePaymentColumn = {
+            "data": { Id: "Id" },
+            "render": RenderAddRemovePaymentButtons,
+            "orderable": false,
+            "searchable": false,
+            "width": "110px"
+        }
+
+        var EnableDisableColumn = {
+            "data": { Id: "Id", Status: "Status" },
+            "render": RenderEnableDisableButtons,
+            "orderable": false,
+            "searchable": false,
+            "width": "40px"
+        }
+        var buttonColumn = {
+            "data": "Id",
+            "render": RenderActionButtonsAdmin,
+            "orderable": false,
+            "searchable": false,
+            "width": "100px"
+        }
+        $(document).ready(
+           GetDataTable('table', '/User/ViewAllStudentUsers',
+               [
+                   { data: null, width: "4%" },
+                   EnableDisableColumn,
+                   {
+                       data: "Status",
+                       render: RenderStatus
+                   },
+                   { data: "Name" },
+                   { data: "FacultyName" },
+                   { data: "LevelName" },
+                   { data: "DivisionName" },
+                   { data: "Phone1" },
+                   {
+                       data: "Balance",
+                       render: renderBalance
+                   },                 
+                   buttonColumn,                 
+                  AddRemovePaymentColumn
+               ])
+       );
+
+
+        function RenderActionButtonsAdmin(Id) {
+            return "<a class='btn btn-success' style='margin-right:4px;' onclick=PopupForm('@Url.Action("AddEditStudentUser", "User")/" + Id + "')><i class='fa fa-pencil'></i></a>\
+                    <a class='btn btn-danger' style='margin-right:1px;' onclick=Delete('@Url.Action("DeleteStudentUser", "User")/" + Id + "','الطالب؟')><i class='fa fa-trash'></i></a>"
+        };
+        function RenderStatus(Status) {
+            if (Status == 0) { return '<h4><span class="label label-success badge-pill">مفعل</span></h4>'; }
+            else if (Status == 1) { return '<h4><span class="label label-danger badge-pill">موقوف</span></h4>'; }
+        };
+        function renderBalance(Balance) {
+            return '<h4>EGP <span class="label label-info badge-pill">' + Balance + '</span></h4>';
+        };
+
+        function RenderEnableDisableButtons(data) {
+            if (data.Status == 0) {
+                return "<a class='btn btn-success' style='margin-right:1px;'\
+                onclick=ToggleStatus('@Url.Action("ToggleUserActive", "User")/" + data.Id + "')><i class='fa fa-stop'></i></a>"
+            }
+            if (data.Status == 1) {
+                return "<a class='btn btn-danger' style='margin-right:1px;'\
+                onclick=ToggleStatus('@Url.Action("ToggleUserActive", "User")/" + data.Id + "')><i class='fa fa-play'></i></a>"
+            }
+
+        };
+
+        function RenderAddRemovePaymentButtons(data) {
+            return "<a class='btn btn-primary' style='width:100%' onclick=PopupForm('@Url.Action("AddBalance", "Payment")/" + data.Id + "')>اضافة رصيد</a>\
+                    <a class='btn btn-warning' style='margin-top:2px;width:100%' onclick=PopupForm('@Url.Action("TakeBalance", "Payment")/" + data.Id + "')>استرداد رصيد</a>"
+          
+        };
+    </script>
+    <script>
+        AnimateButton2('AddButton');
+    </script>
+}

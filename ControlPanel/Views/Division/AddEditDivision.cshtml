@@ -1,0 +1,66 @@
+﻿@model ControlPanel.Models.DivisionDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<head>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+
+@using (Html.BeginForm("AddEditDivision", "Division", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="container PanelContainer" style="width:450px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">بيانات الاقسام</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", autofocus = "autofocus" } })
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LevelDropDownList, new { @class = "control-label" })
+                            @Html.DropDownListFor(model => model.LevelId, Model.LevelDropDownList,
+                           new { @class = "form-control", role = "menu", datatoggle = "dropdown", id = "levelDropDown" })
+                            @Html.ValidationMessageFor(model => model.LevelDropDownList)
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @{
+                        if (Model.Id == 0)
+                        {
+                            <input type="submit" value="اضافة" class="btn btn-success" style="width:100%" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="تعديل" class="btn btn-success" style="width:100%" />
+                        }
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+                        }
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>$.validator.setDefaults({ onkeyup: false });</script>
+<script>
+    DropDownSuggestions('levelDropDown');
+</script>

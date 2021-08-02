@@ -1,0 +1,139 @@
+﻿@model ControlPanel.Models.LiveDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<head>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+
+@using (Html.BeginForm("AddEditLive", "Live", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="container PanelContainer" style="width:650px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">بيانات اللايف</div>
+            <div class="panel-body">
+
+  
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TrainerDropDownList, new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.UserId, Model.TrainerDropDownList,
+                           new { @class = "form-control", role = "menu", datatoggle = "dropdown", id = "TrainerDropDown" })
+                                @Html.ValidationMessageFor(model => model.TrainerDropDownList)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MaterialDropDownList, new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.MaterialId, Model.MaterialDropDownList,
+                           new { @class = "form-control", role = "menu", datatoggle = "dropdown", id = "MateriaDropDown" })
+                                @Html.ValidationMessageFor(model => model.MaterialDropDownList)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Time, new { @class = "control-label" })
+                                @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Time)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Date, new { @class = "control-label" })
+                                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Date)
+                            </div>
+                        </div>                      
+                    </div>
+
+ 
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Comment, new { @class = "control-label" })
+                                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Comment)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ZoomMeetingId, new { @class = "control-label" })
+                                @Html.EditorFor(model => model.ZoomMeetingId, new { htmlAttributes = new { @class = "form-control"} })
+                                @Html.ValidationMessageFor(model => model.ZoomMeetingId)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ZoomPassword, new { @class = "control-label" })
+                                @Html.EditorFor(model => model.ZoomPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ZoomPassword)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Price, new { @class = "control-label" })
+                                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.Price)
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                <div class="form-group">
+                    @{
+                        if (Model.Id == 0)
+                        {
+                            <input type="submit" value="اضافة" class="btn btn-success" style="width:100%" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="تعديل" class="btn btn-success" style="width:100%" />
+                        }
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+                        }
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>$.validator.setDefaults({ onkeyup: false });</script>
+<script>
+    DropDownSuggestions('TrainerDropDown');
+    DropDownSuggestions('MateriaDropDown');
+</script>

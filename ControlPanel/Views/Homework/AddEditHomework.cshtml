@@ -1,0 +1,115 @@
+﻿@model ControlPanel.Models.HomeworkDto
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<head>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+
+@*this will post form data to HTTPPOST action method*@
+@using (Html.BeginForm("AddEditHomework", "Homework", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return SubmitFormWithImage(this);" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    @*<h1>player id = @Model.ExamID </h1>*@
+
+    <div class="container PanelContainer">
+        <div class="panel panel-primary">
+            <div class="panel-heading">اضافة الواجب</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MaterialsDropDownList, new { @class = "control-label" })
+                            @Html.DropDownListFor(model => model.MaterialId, Model.MaterialsDropDownList, new { @class = "form-control", role = "menu", datatoggle = "dropdown" })
+                            @Html.ValidationMessageFor(model => model.MaterialsDropDownList)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.HomeworkFile, htmlAttributes: new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.HomeworkFile, "", new { @type = "file" })
+                            @if (Model.isValid && !string.IsNullOrEmpty(Model.Message))
+                            {
+                                <span class="text-success">@Model.Message</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">@Model.Message</span>@Html.ValidationMessageFor(m => m.HomeworkFile, "", new { @class = "text-danger" })
+                            }
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Date, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Date)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Price, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Price)
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    @{
+                        if (Model.Id == 0)
+                        {
+                            <input type="submit" value="Add" class="btn btn-success" style="width:100%" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="Edit" class="btn btn-success" style="width:100%" />
+                        }
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+                        }
+<script src="~/Scripts/notify.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>$.validator.setDefaults({ onkeyup: false });</script>
+<script>
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        $(element).notify("Copied!",
+            { position: "top right", className: 'success', autoHideDelay: 700 }
+         );
+    }
+</script>
+<script>
+    DropDownSuggestions('MaterialsDropDownList');
+</script>

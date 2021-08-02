@@ -1,0 +1,223 @@
+﻿@model ControlPanel.Models.DashboardDto
+@{
+    ViewBag.Title = "الاحصائيات";
+}
+
+<div class="gradient-Header animate__animated animate__fadeInLeft">
+    <div class="gradient-child">
+        <h1>الاحصائيات</h1>
+    </div>
+</div>
+
+
+@using (Html.BeginForm("Index", "Dashboard", FormMethod.Post))
+{
+    <div class="row" style="text-align:right;direction:rtl;font-family:Tajawal;margin-top:15px;">
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <input type="submit" id="SearchButton" value="بحث" class="btn btn-success" style="width:100%" />
+            </div>
+        </div>
+
+
+
+        <div class="col-md-5">
+            <div class="form-group form-inline">
+
+                <div class="col-md-11">
+                    @Html.EditorFor(model => model.ToDate,
+                   new
+                   {
+                       htmlAttributes = new
+                       {
+                           @class = "form-control",
+                           style = "width:100%"
+                       }
+                   })
+                    @Html.ValidationMessageFor(model => model.ToDate)
+                </div>
+
+                <div class="col-md-1">
+                    @Html.LabelFor(model => model.ToDate, new { @class = "control-label" })
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-5">
+            <div class="form-group form-inline">
+
+                <div class="col-md-11">
+                    @Html.EditorFor(model => model.FromDate,
+                   new
+                   {
+                       htmlAttributes = new
+                       {
+                           @class = "form-control",
+                           style = "width:100%"
+                       }
+                   })
+                    @Html.ValidationMessageFor(model => model.FromDate)
+                </div>
+                <div class="col-md-1">
+                    @Html.LabelFor(model => model.FromDate, new { @class = "control-label" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="text-align:right;direction:rtl;font-family:Tajawal;margin-top:15px;">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.MaterialDropDownList, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.MaterialId, Model.MaterialDropDownList,
+                           new { @class = "form-control", role = "menu", datatoggle = "dropdown", id = "materialDropDown" })
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.LevelDropDownList, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.LevelId, Model.LevelDropDownList,
+                           new { @class = "form-control", role = "menu", datatoggle = "dropdown", id = "levelDropDown" })
+
+            </div>
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.FacultyDropDownList, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.FacultyId, Model.FacultyDropDownList,
+                           new { @class = "form-control", role = "menu", datatoggle = "dropdown", id = "facultyDropDown" })
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+
+    <div class="row flex-container center">
+
+        <div class="col-md-12" style="background-color:#2c4375;border-radius:20px;padding:2px">
+            <p>
+                <h2 style="color:white">عدد الطلاب المسجلين</h2>
+                <h3 style="color:white">@Model.RegisteredStudents</h3>
+            </p>
+        </div>
+
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12" style="background-color:#b284be;border-radius:20px;">
+            <p>
+                <h1 style="color:white">المشتريات</h1>
+                <h2 style="color:white">@Model.Purchases</h2>
+            </p>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script>
+        function populateFaculty() {
+            let facultyId = $('#facultyDropDown').val();
+            let levelId = $('#levelDropDown').val();
+
+            if (facultyId == -1) {
+                $('#levelDropDown').prop("disabled", true);
+                if (levelId == -1) {
+                    $('#materialDropDown').prop("disabled", true);
+                }
+            }
+            else {
+                $('#levelDropDown').prop("disabled", false);
+                console.log("here2")
+            }
+
+
+            if (levelId == -1) {
+                $('#materialDropDown').prop("disabled", true);
+            }
+            else {
+                $('#materialDropDown').prop("disabled", false);
+            }
+        }
+
+
+        function populateMaterials() {
+            $('#levelDropDown').on('change', function () {
+                let levelId = parseInt($(this).val());
+
+                if (levelId == -1) {
+                    $('#materialDropDown').prop("disabled", true);
+                }
+                else {
+                    $('#materialDropDown').prop("disabled", false);
+                }
+
+                $.ajax({
+                    type: "Get",
+                    url: "/Validation/GetMaterialsByLevelId?levelId=" + levelId,
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#materialDropDown').empty();
+                        for (var i = 0; i < data.length; i++) {
+                            $('#materialDropDown').append('<option value=' + data[i].Id + '>' + data[i].Name + '</option > ');
+                        }
+                    }
+                });
+
+
+            });
+        }
+
+
+
+        function populateLevels() {
+            $('#facultyDropDown').on('change', function () {
+                let levelId = $('#levelDropDown').val();
+                let facultyId = parseInt($(this).val());
+
+                if (facultyId == -1) {
+                    $('#levelDropDown').prop("disabled", true);
+                    $('#materialDropDown').prop("disabled", true);
+                    levelId = -1;
+                }
+                else {
+                    $('#levelDropDown').prop("disabled", false);
+                    levelId = $('#levelDropDown').val();
+                }
+
+                $.ajax({
+                    type: "Get",
+                    url: "/Validation/GetLevelsByFacultyId?facultyId=" + facultyId,
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#levelDropDown').empty();
+                        for (var i = 0; i < data.length; i++) {
+                            $('#levelDropDown').append('<option value=' + data[i].Id + '>' + data[i].Name + '</option > ');
+                        }
+                    }
+                });
+
+
+            });
+        }
+
+
+        populateFaculty();
+        populateLevels();
+        populateMaterials();
+    </script>
+}
+

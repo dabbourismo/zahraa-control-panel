@@ -1,0 +1,89 @@
+﻿@model ControlPanel.Models.BalanceDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<head>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+
+@using (Html.BeginForm("AddBalance", "Payment", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.UserId)
+    <div class="container PanelContainer" style="width:650px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">اضافة رصيد</div>
+            <div class="panel-body">
+
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.OldBalance, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.OldBalance, new { htmlAttributes = new { @id = "OldBalance", @class = "form-control", @type = "number", disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.OldBalance)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AddedBalance, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.AddedBalance, new { htmlAttributes = new { @id = "AddedBalance", @class = "form-control", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.AddedBalance)
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.RemainingBalance, new { @class = "control-label" })
+                            @Html.EditorFor(model => model.RemainingBalance, new { htmlAttributes = new { @id = "RemainingBalance", @class = "form-control", @type = "number", disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.RemainingBalance)
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="اضافة" class="btn btn-success" style="width:100%" />
+        </div>
+
+
+    </div>
+
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>$.validator.setDefaults({ onkeyup: false });</script>
+<script src="~/Scripts/Main.js"></script>
+<script>
+    $('#AddedBalance').on('keyup focus', calcRemaining);
+
+    function calcRemaining() {
+        var addedBalance = parseInt($('#AddedBalance').val(), 10);
+        var oldBalance = parseInt($("#OldBalance").val(), 10);
+
+        SetNumericValueToZeroIfEmpty('#AddedBalance');
+
+        var remaining = oldBalance + addedBalance;
+        if (isNaN(remaining)) {
+            $('#RemainingBalance').val(oldBalance);
+        }
+        else {
+            $('#RemainingBalance').val(remaining);
+        }
+    }
+
+</script>
+

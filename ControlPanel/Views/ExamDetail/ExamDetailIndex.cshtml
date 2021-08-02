@@ -1,0 +1,67 @@
+﻿@model Repository.Models.Exam
+@{
+    ViewBag.Title = "تفاصيل الاختبار";
+}
+
+<!DOCTYPE html>
+<div class="gradient-Header animate__animated animate__fadeInLeft" style="margin-bottom:20px">
+    <div class="gradient-child">
+        <h1>@Model.ExamName</h1>
+        <h4>جميع الاسئلة</h4>
+    </div>
+</div>
+
+<a class="btn btn-primary" id="AddButton" style="margin-bottom:10px;margin-top:15px;"
+    onclick="PopupForm('@Url.Action("AddEditExamDetail", "ExamDetail",new {examId=Model.Id })')">
+    اضافة سؤال جديد <i class="fa fa-plus"> </i>
+</a>
+
+<table id="table" class="table table-bordered table-hover" style="width:100%">
+    <thead class="thead-light">
+        <tr>
+            <th>Question</th>
+            <th>Answer 1</th>
+            <th>Answer 2</th>
+            <th>Answer 3</th>
+            <th>Answer 4</th>
+            <th>Answer 5</th>
+            <th>Right Answer</th>
+            <th>Question Time</th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts{
+    <script>
+
+     $(document).ready(
+     GetDataTable('table', '@Url.Action("ViewAllExamDetails", "ExamDetail",new {id = Model.Id })',
+      [
+             { "data": "Question" },
+             { "data": "Answer1" },
+             { "data": "Answer2" },
+             { "data": "Answer3" },
+             { "data": "Answer4" },
+             { "data": "Answer5" },
+             { "data": "RightAnswer" },
+             { "data": "QuestionTimer" },
+             {
+                 "data": "Id",
+                 "render": RenderActionButtons,
+                 "orderable": false,
+                 "searchable": false,
+                 "width": "210px"
+             }
+      ]));
+        /*==========================================================================*/
+        function RenderActionButtons(Id) {
+            return "<a class='btn btn-success btn-sm' style='margin-right:5px;' onclick=PopupForm('@Url.Action("AddEditExamDetail", "ExamDetail")/" + Id + "')><i class='fa fa-pencil'></i></a>\
+                    <a class='btn btn-danger btn-sm' style='margin-right:5px;' onclick=Delete('@Url.Action("DeleteExamDetail", "ExamDetail")/" + Id + "','السؤال؟')><i class='fa fa-trash'></i></a>"
+        };
+        /*==========================================================================*/
+    </script>
+<script>
+        AnimateButton2('AddButton');
+</script>
+}
